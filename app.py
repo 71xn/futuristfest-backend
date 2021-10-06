@@ -68,7 +68,7 @@ def health():
 def footprintcalc():
     house2 = request.args.get("house2", None)
     print(house2)
-    house2 = int(house2)
+    house2 = 100 - int(house2)
     footprint = house2 / 100
     response = {"footprintScore": footprint}
     return jsonify(response)
