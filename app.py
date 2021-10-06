@@ -61,3 +61,14 @@ def health():
     dbhealth = sqltest();
     response = {"health-status": f"{dbhealth}"}
     return jsonify(response)
+
+
+@app.route('/env-data/', methods=['GET'])
+@cross_origin()
+def footprintcalc():
+    house2 = request.args.get("house2", None)
+    print(house2)
+    house2 = int(house2)
+    footprint = house2 / 100
+    response = {"footprintScore": footprint}
+    return jsonify(response)
