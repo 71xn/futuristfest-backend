@@ -1,0 +1,41 @@
+Food,%,
+Meat every meal,37,
+Meat once a day,29,Average
+Couple times,20,
+Once a week,13,
+Pescytarian,2.9,
+Vegetarian,1.33,
+,,
+,,
+House,%,
+Detached,43,
+Semi-detached,36,Average
+Low-density,22,
+High-density,15,
+,,
+Transport,%,
+Helicopter,310,
+Car,31,Average
+Bus,6,
+Moped,1,
+,,
+Energy,%,
+No green,36,
+30%,29,Average
+,,
+Energy saving,-%,
+No implements,0,
+Couple Implements,5,Average
+Many implements,10,
+Don't know,5,
+,,
+People in house,,
+House emissions go down by 5% per person,,
+,,
+Air Travel(km),Numbers,
+Domestic,53,1 average of this
+1250,110,1 average of this
+2500,206,
+5500,400,
+9000,650,
+17500,855,
