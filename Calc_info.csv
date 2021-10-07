@@ -14,25 +14,25 @@ Low-density,22,
 High-density,15,
 ,,
 Transport,%,
-Helicopter,310,
-Car,31,Average
-Bus,6,
 Moped,1,
+Car,31,Average
+Helicopter,600,
+Bus,6,
 ,,
 Energy,%,
 No green,36,
 30%,29,Average
 ,,
 Energy saving,-%,
-No implements,0,
-Couple Implements,5,Average
 Many implements,10,
-Don't know,5,
+Couple Implements,5,Average
+No implements,0,
+Don't know,3,
 ,,
 People in house,,
 House emissions go down by 5% per person,,
 ,,
-Air Travel(km),Numbers,
+Air Travel(km),Numbers(kg),
 Domestic,53,1 average of this
 1250,110,1 average of this
 2500,206,
