@@ -98,63 +98,64 @@ def footprintcalc():
             "raising an error on our github page!")
 
     # Calculating food emissions based upon meat diet
-    meat_consumption = request.args.get('Food1', None)
+    meat_consumption = int(request.args.get('Food1', None))
     food_em = int(calc_data[meat_consumption][1])/100
 
     # Adjusting food emissions based upon local sourcing
-    local_source_ns = request.args.get('Check1', None)
+    local_source_ns = bool(request.args.get('Check1', None))
     if local_source_ns:
         local_sourcing = 50
     else:
-        local_sourcing = request.args.get('Food2', None)
+        local_sourcing = int(request.args.get('Food2', None))
     food_em = food_em - food_em * local_sourcing/1000
 
     # Calculating transport emissions based upon primary means of travel
-    vehicle = request.args.get('Transport1', None)
+    vehicle = int(request.args.get('Transport1', None))
     if vehicle != 1:
         transport_em = int(calc_data[14+vehicle][1])/100
     else:
         transport_em = 0
 
     # Calculating air travel emissions based upon number of flights (round-trip)
-    domestic = request.args.get('Flights1', None)
+    domestic = int(request.args.get('Flights1', None))
     domestic = domestic * int(calc_data[35][1]) * 2
-    twelve_fifty = request.args.get('Flights2', None)
+    twelve_fifty = int(request.args.get('Flights2', None))
     twelve_fifty = twelve_fifty * int(calc_data[36][1]) * 2
-    twentyfive_hundo = request.args.get('Flights3', None)
+    twentyfive_hundo = int(request.args.get('Flights3', None))
     twentyfive_hundo = twentyfive_hundo * int(calc_data[37][1]) * 2
-    fiftyfive_hundo = request.args.get('Flights4', None)
+    fiftyfive_hundo = int(request.args.get('Flights4', None))
     fiftyfive_hundo = fiftyfive_hundo * int(calc_data[38][1]) * 2
-    ninety_hundo = request.args.get('Flights5', None)
+    ninety_hundo = int(request.args.get('Flights5', None))
     ninety_hundo = ninety_hundo * int(calc_data[39][1]) * 2
-    seventeen_five_hundo = request.args.get('Flights6', None)
+    seventeen_five_hundo = int(request.args.get('Flights6', None))
     seventeen_five_hundo = seventeen_five_hundo * int(calc_data[40][1]) * 2
 
     flights_em = domestic + twelve_fifty + twentyfive_hundo + fiftyfive_hundo + ninety_hundo + seventeen_five_hundo
     flights_em = flights_em/1000
-    private_flyer = request.args.get('Flights7', None)
-    if private_flyer:
-        flights_em += 100000000
+    # This fucks it all up
+    #private_flyer = bool(request.args.get('Flights7', None))
+    #if private_flyer:
+     #   flights_em += 100000000
 
     # Calculating home emissions based upon house type
-    house = request.args.get('House1', None)
+    house = int(request.args.get('House1', None))
     home_em = int(calc_data[house+9][1])/100
 
     # Adjusting home emissions based upon people in the home
-    adults = request.args.get('House4', None)
+    adults = int(request.args.get('House4', None))
     home_em = home_em - (adults-1) * 0.07
 
     # Calculating energy emissions based upon energy mix
-    energy_ns = request.args.get('Check2', None)
+    energy_ns = bool(request.args.get('Check2', None))
     if energy_ns:
         energy = 30
     else:
-        energy = request.args.get('House2', None)
+        energy = int(request.args.get('House2', None))
     energy_em = int(calc_data[22][1])/100
     energy_em = energy_em - energy/100 * energy_em
 
     # Adjusting energy emissions based upon energy-saving implements
-    esavers = request.args.get('House3', None)
+    esavers = int(request.args.get('House3', None))
     if esavers == 0:
         energy_saved = 3
     else:
@@ -203,12 +204,18 @@ def footprintcalc():
     total_em += flights_em
 
     # Turning the total emissions into a footprint score
+    print(total_em)
+    print(flights_em)
+    print(average)
     if total_em >= average * 1.5:
         footprint = 1
+        print(footprint)
     elif total_em <= average * 0.6:
         footprint = 0.05
+        print(footprint)
     else:
         footprint = (total_em-average)/average + 0.5
+        print(footprint)
 
     # Returning the carbon footprint to the site
     response = {"footprintScore": footprint}
