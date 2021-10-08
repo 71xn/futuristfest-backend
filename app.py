@@ -187,9 +187,9 @@ def footprintcalc():
         footprint = (total_em - average) / average + 0.5
 
     # Calculating a goal score based upon half of the average footprint
-    if total_em >= average:
+    if total_em >= average-0.1:
         goal_score = 0
-    elif total_em <= goal:
+    elif total_em <= goal+0.1:
         goal_score = 1
     else:
         goal_score = round(1 - (total_em - goal)/goal)
