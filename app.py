@@ -194,8 +194,10 @@ def footprintcalc():
     else:
         goal_score = round(1 - (total_em - goal)/goal, 2)
 
+
     # Returning the carbon footprint to the site
     response = {"footprintScore": footprint, "foodAverage": food_average, "homeAverage": home_average,
                 "transportAverage": transport_average, "energyAverage": energy_average,
-                "flightsAverage": flights_average, 'goalScore': goal_score, 'totalEmissions': round(total_em, 1)}
+                "flightsAverage": flights_average, 'goalScore': goal_score, 'totalEmissions': round(total_em, 1),
+                'goal': round(goal, 1)}
     return jsonify(response)
