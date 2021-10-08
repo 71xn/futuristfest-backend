@@ -6,31 +6,8 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+
 # Database stuff - we can probably comment this out at this point
-try:
-    conn = psycopg2.connect(
-        host="ec2-54-170-163-224.eu-west-1.compute.amazonaws.com",
-        database="de4fdaf8osb01c",
-        user="epsxuyzwewbnlj",
-        password="bfd54096dbb405f667865b7c0cc632161c41e4b1773cbd656057dcc537f7788f")
-except (Exception, psycopg2.DatabaseError) as error:
-    print(error)
-
-
-def sqltest():
-    cur = conn.cursor()
-
-    # execute a statement
-    print('PostgreSQL database version:')
-    cur.execute('SELECT version()')
-
-    # display the PostgreSQL database server version
-    db_version = cur.fetchone()
-    print(db_version)
-
-    # close the communication with the PostgreSQL
-    cur.close()
-    return "Database status: UP, Database Version: " + str(db_version)
 
 
 # Loading in data for a fresh API call - reliable but inefficient, may not need to be fixed
@@ -53,7 +30,6 @@ def load_data():
 @app.route("/")
 @cross_origin()
 def helloWorld():
-    sqltest()
     return "Hello, cross-origin-world!"
 
 
@@ -75,8 +51,7 @@ def respond():
 @app.route('/healthcheck/', methods=['GET'])
 @cross_origin()
 def health():
-    dbhealth = sqltest();
-    response = {"health-status": f"{dbhealth}"}
+    response = {"health-status": "All Good"}
     return jsonify(response)
 
 
@@ -99,7 +74,7 @@ def footprintcalc():
 
     # Calculating food emissions based upon meat diet
     meat_consumption = int(request.args.get('Food1', None))
-    food_em = int(calc_data[meat_consumption][1])/100
+    food_em = float(calc_data[meat_consumption][1]) / 100
 
     # Adjusting food emissions based upon local sourcing
     local_source_ns = request.args.get('Check1', None)
@@ -107,12 +82,12 @@ def footprintcalc():
         local_sourcing = 50
     else:
         local_sourcing = int(request.args.get('Food2', None))
-    food_em = food_em - food_em * local_sourcing/1000
+    food_em = food_em - food_em * local_sourcing / 1000
 
     # Calculating transport emissions based upon primary means of travel
     vehicle = int(request.args.get('Transport1', None))
     if vehicle != 1:
-        transport_em = int(calc_data[14+vehicle][1])/100
+        transport_em = int(calc_data[14 + vehicle][1]) / 100
     else:
         transport_em = 0
 
@@ -131,18 +106,18 @@ def footprintcalc():
     seventeen_five_hundo = seventeen_five_hundo * int(calc_data[40][1]) * 2
 
     flights_em = domestic + twelve_fifty + twentyfive_hundo + fiftyfive_hundo + ninety_hundo + seventeen_five_hundo
-    flights_em = flights_em/1000
+    flights_em = flights_em / 1000
     private_flyer = request.args.get('Flights7', None)
     if private_flyer == "true":
         flights_em += 100000000
 
     # Calculating home emissions based upon house type
     house = int(request.args.get('House1', None))
-    home_em = int(calc_data[house+9][1])/100
+    home_em = int(calc_data[house + 9][1]) / 100
 
     # Adjusting home emissions based upon people in the home
     adults = int(request.args.get('House4', None))
-    home_em = home_em - (adults-1) * 0.07
+    home_em = home_em - (adults - 1) * 0.07
 
     # Calculating energy emissions based upon energy mix
     energy_ns = bool(request.args.get('Check2', None))
@@ -150,42 +125,42 @@ def footprintcalc():
         energy = 30
     else:
         energy = int(request.args.get('House2', None))
-    energy_em = int(calc_data[22][1])/100
-    energy_em = energy_em - energy/100 * energy_em
+    energy_em = int(calc_data[22][1]) / 100
+    energy_em = energy_em - energy / 100 * energy_em
 
     # Adjusting energy emissions based upon energy-saving implements
     esavers = int(request.args.get('House3', None))
     if esavers == 0:
         energy_saved = 3
     else:
-        energy_saved = int(calc_data[26+esavers][1])
-    energy_em = energy_em - energy_saved/100
+        energy_saved = int(calc_data[26 + esavers][1])
+    energy_em = energy_em - energy_saved / 100
 
     # Calculating if anything is much above or below average for every single category
-    if food_em >= int(calc_data[2][1])/100 + 0.05:
+    if food_em >= int(calc_data[2][1]) / 100 + 0.05:
         food_average = 'Above average'
-    elif food_em <= int(calc_data[2][1])/100 - 0.05:
+    elif food_em <= int(calc_data[2][1]) / 100 - 0.05:
         food_average = 'Below average'
     else:
         food_average = 'Average'
 
-    if home_em >= int(calc_data[11][1])/100 + 0.08*(adults-1):
+    if home_em >= int(calc_data[11][1]) / 100 + 0.08 * (adults - 1):
         home_average = 'Above average'
-    elif home_em <= int(calc_data[11][1])/100 - 0.05*(adults-1):
+    elif home_em <= int(calc_data[11][1]) / 100 - 0.05 * (adults - 1):
         home_average = 'Below average'
     else:
         home_average = 'Average'
 
-    if transport_em >= int(calc_data[17][1])/100 + 0.05:
+    if transport_em >= int(calc_data[17][1]) / 100 + 0.05:
         transport_average = 'Above average'
-    elif transport_em <= int(calc_data[17][1])/100 - 0.05:
+    elif transport_em <= int(calc_data[17][1]) / 100 - 0.05:
         transport_average = 'Below average'
     else:
         transport_average = 'Average'
 
-    if energy_em >= int(calc_data[23][1])/100:
+    if energy_em >= int(calc_data[23][1]) / 100:
         energy_average = 'Above average'
-    elif energy_em <= int(calc_data[23][1])/100 - 0.1:
+    elif energy_em <= int(calc_data[23][1]) / 100 - 0.1:
         energy_average = 'Below average'
     else:
         energy_average = 'Average'
@@ -213,9 +188,11 @@ def footprintcalc():
         footprint = 0.05
         print(footprint)
     else:
-        footprint = (total_em-average)/average + 0.5
+        footprint = (total_em - average) / average + 0.5
         print(footprint)
 
     # Returning the carbon footprint to the site
-    response = {"footprintScore": footprint}
+    response = {"footprintScore": footprint, "foodAverage": food_average, "homeAverage": home_average,
+                "transportAverage": transport_average, "energyAverage": energy_average,
+                "flightsAverage": flights_average}
     return jsonify(response)
