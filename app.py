@@ -176,23 +176,26 @@ def footprintcalc():
     total_em = food_em + transport_em + home_em + energy_em
     total_em *= average
     total_em += flights_em
+    goal = average / 2
 
     # Turning the total emissions into a footprint score
-    print(total_em)
-    print(flights_em)
-    print(average)
     if total_em >= average * 1.5:
         footprint = 1
-        print(footprint)
     elif total_em <= average * 0.6:
         footprint = 0.05
-        print(footprint)
     else:
         footprint = (total_em - average) / average + 0.5
-        print(footprint)
+
+    # Calculating a goal score based upon half of the average footprint
+    if total_em >= goal * 1.5:
+        goal_score = 1
+    elif total_em <= goal * 0.6:
+        goal_score = 0.05
+    else:
+        goal_score = (total_em - goal) / goal + 0.5
 
     # Returning the carbon footprint to the site
     response = {"footprintScore": footprint, "foodAverage": food_average, "homeAverage": home_average,
                 "transportAverage": transport_average, "energyAverage": energy_average,
-                "flightsAverage": flights_average}
+                "flightsAverage": flights_average, 'goalScore': goal_score, 'totalEmissions': round(total_em, 1)}
     return jsonify(response)
