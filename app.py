@@ -102,8 +102,8 @@ def footprintcalc():
     food_em = int(calc_data[meat_consumption][1])/100
 
     # Adjusting food emissions based upon local sourcing
-    local_source_ns = bool(request.args.get('Check1', None))
-    if local_source_ns:
+    local_source_ns = request.args.get('Check1', None)
+    if local_source_ns == "true":
         local_sourcing = 50
     else:
         local_sourcing = int(request.args.get('Food2', None))
@@ -132,10 +132,9 @@ def footprintcalc():
 
     flights_em = domestic + twelve_fifty + twentyfive_hundo + fiftyfive_hundo + ninety_hundo + seventeen_five_hundo
     flights_em = flights_em/1000
-    # This fucks it all up
-    #private_flyer = bool(request.args.get('Flights7', None))
-    #if private_flyer:
-     #   flights_em += 100000000
+    private_flyer = request.args.get('Flights7', None)
+    if private_flyer == "true":
+        flights_em += 100000000
 
     # Calculating home emissions based upon house type
     house = int(request.args.get('House1', None))
@@ -147,7 +146,7 @@ def footprintcalc():
 
     # Calculating energy emissions based upon energy mix
     energy_ns = bool(request.args.get('Check2', None))
-    if energy_ns:
+    if energy_ns == "true":
         energy = 30
     else:
         energy = int(request.args.get('House2', None))
