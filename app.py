@@ -192,7 +192,7 @@ def footprintcalc():
     elif total_em <= goal+0.1:
         goal_score = 1
     else:
-        goal_score = round(1 - (total_em - goal)/goal)
+        goal_score = round(1 - (total_em - goal)/goal, 2)
 
     # Returning the carbon footprint to the site
     response = {"footprintScore": footprint, "foodAverage": food_average, "homeAverage": home_average,
