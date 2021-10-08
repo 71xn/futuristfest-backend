@@ -187,12 +187,12 @@ def footprintcalc():
         footprint = (total_em - average) / average + 0.5
 
     # Calculating a goal score based upon half of the average footprint
-    if total_em >= goal * 1.5:
+    if total_em >= average:
+        goal_score = 0
+    elif total_em <= goal:
         goal_score = 1
-    elif total_em <= goal * 0.6:
-        goal_score = 0.05
     else:
-        goal_score = (total_em - goal) / goal + 0.5
+        goal_score = round(1 - (total_em - goal)/goal)
 
     # Returning the carbon footprint to the site
     response = {"footprintScore": footprint, "foodAverage": food_average, "homeAverage": home_average,
